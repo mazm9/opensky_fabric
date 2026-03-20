@@ -1,0 +1,51 @@
+.create table opensky_raw (['time']:datetime, ['states']:dynamic)
+
+.create table opensky_silver (
+    event_time:datetime,
+    icao24:string,
+    callsign:string,
+    origin_country:string,
+    longitude:real,
+    latitude:real,
+    velocity:real,
+    on_ground:bool
+)
+
+.create table opensky_silver (
+    event_time:datetime,
+    icao24:string,
+    callsign:string,
+    origin_country:string,
+    longitude:real,
+    latitude:real,
+    velocity:real,
+    on_ground:bool
+)
+
+.set-or-append opensky_silver <|
+opensky_raw
+| mv-expand states
+| extend
+    event_time = ['time'],
+    icao24 = tostring(states[0]),
+    callsign = trim(" ", tostring(states[1])),
+    origin_country = tostring(states[2]),
+    longitude = todouble(states[5]),
+    latitude = todouble(states[6]),
+    velocity = todouble(states[9]),
+    on_ground = tobool(states[8])
+| project event_time, icao24, callsign, origin_country, longitude, latitude, velocity, on_ground
+
+.create table opensky_gold (
+    origin_country:string,
+    active_planes:long,
+    avg_velocity:real
+)
+
+.set-or-replace opensky_gold <|
+opensky_silver
+| summarize
+    active_planes = dcount(icao24),
+    avg_velocity = avg(velocity)
+by origin_country
+| top 10 by active_planes desc
