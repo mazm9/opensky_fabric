@@ -11,6 +11,9 @@ The goal of this project is to build a near-real-time ELT pipeline in Microsoft 
 - Silver: `opensky_silver`
 - Gold: `opensky_gold`
 
+<img width="1004" height="283" alt="image" src="https://github.com/user-attachments/assets/9458bfb2-d82c-4465-89a0-ecc2d7478e33" />
+
+
 ## Bronze Layer
 Raw JSON snapshots from OpenSky API are ingested into `opensky_raw`.
 
