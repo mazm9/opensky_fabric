@@ -1,8 +1,8 @@
 # Real-Time ELT Pipeline in Microsoft Fabric - OpenSky Air Traffic Monitoring
 
 ## Problem Statement
-The goal of this project is to build a near-real-time ELT pipeline in Microsoft Fabric using medallion architecture to monitor air traffic over a selected geographic area.  
-Flight data is ingested from the OpenSky REST API into Microsoft Fabric Eventhouse, transformed into structured flight-level records, and aggregated into analytical metrics such as the number of active aircraft and average velocity by country of origin.
+The goal of this project is to build a near real time ELT pipeline in Microsoft Fabric using medallion architecture to monitor air traffic over a selected geographic area.  
+Flight data is ingested from the OpenSky REST API into Microsoft Fabric Eventhouse, transformed into structured flight level records, and aggregated into analytical metrics such as the number of active aircraft and average velocity by country of origin.
 
 ---
 
