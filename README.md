@@ -4,6 +4,8 @@
 The goal of this project is to build a near-real-time ELT pipeline in Microsoft Fabric using medallion architecture to monitor air traffic over a selected geographic area.  
 Flight data is ingested from the OpenSky REST API into Microsoft Fabric Eventhouse, transformed into structured flight-level records, and aggregated into analytical metrics such as the number of active aircraft and average velocity by country of origin.
 
+---
+
 ## Architecture
 - Source: OpenSky REST API
 - Ingestion: Fabric Eventstream
@@ -12,12 +14,20 @@ Flight data is ingested from the OpenSky REST API into Microsoft Fabric Eventhou
 - Silver: `opensky_silver`
 - Gold: `opensky_gold`
 
+![Architecture](architecture.png)
+
+---
+
 ## Bronze Layer
 Raw JSON snapshots from OpenSky API are ingested into `opensky_raw`.
 
 Schema:
 - `time` - datetime
 - `states` - dynamic
+
+![Bronze Layer](screenshot_4.png)
+
+---
 
 ## Silver Layer
 The `states` array is expanded into structured flight-level records in `opensky_silver`.
@@ -32,6 +42,10 @@ Schema:
 - `velocity` - real
 - `on_ground` - bool
 
+![Silver Layer](screenshot_5.png)
+
+---
+
 ## Gold Layer
 Aggregated metrics are calculated and stored in `opensky_gold`, including:
 - number of active aircraft by country
@@ -41,6 +55,23 @@ Schema:
 - `origin_country` - string
 - `active_planes` - long
 - `avg_velocity` - real
+
+![Gold Layer](screenshot_6.png)
+
+---
+
+## Platform Overview
+
+### Fabric Workspace
+![Workspace](screenshot_1.png)
+
+### Eventhouse Overview
+![Eventhouse](screenshot_2.png)
+
+### Tables Overview
+![Tables](screenshot_3.png)
+
+---
 
 ## Data Quality Risks
 1. Duplicate aircraft across snapshots  
@@ -52,6 +83,8 @@ Schema:
 3. Snapshot inconsistency and API latency  
    The API provides periodic snapshots rather than continuous events, so temporary delays or polling intervals may affect real-time accuracy.
 
+---
+
 ## Technologies
 - Microsoft Fabric
 - Eventstream
@@ -59,20 +92,19 @@ Schema:
 - KQL
 - OpenSky REST API
 
+---
+
 ## Files
 - `opensky_pipeline.kql` - reproducible KQL script
 - `architecture.png` - high-level architecture and logical flow
 - `screenshot_1.png` - Fabric workspace objects overview
 - `screenshot_2.png` - Eventhouse system overview
 - `screenshot_3.png` - database tables overview
-- `screenshot_4.png` - Bronze layer (`opensky_raw`) preview
-- `screenshot_5.png` - Silver layer (`opensky_silver`) preview
+- `screenshot_4.png` - Bronze layer preview
+- `screenshot_5.png` - Silver layer preview
+- `screenshot_6.png` - Gold layer preview
 
-## Reproducible KQL Script
-The project logic is implemented in `opensky_pipeline.kql` and includes:
-- creation of Silver and Gold tables
-- transformation from Bronze to Silver
-- aggregation from Silver to Gold
+---
 
 ## Reproducible KQL Script
 The project logic is implemented in `opensky_pipeline.kql` and includes:
@@ -107,6 +139,8 @@ opensky_silver
 by origin_country
 | top 10 by active_planes desc
 ```
+
+---
 
 ## Summary
 This project demonstrates how Microsoft Fabric can be used to implement a medallion-style ELT pipeline on near-real-time API data using Bronze, Silver, and Gold layers.
